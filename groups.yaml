@@ -132,8 +132,10 @@ bathroom_tab:
     - automation.bathroom_light_dim_when_idle_a_while
     - automation.bathroom_light_dim_when_idle_a_longer
     - automation.bathroom_light_turn_off_while_long_idle
-    - automation.bathroom_light_turn_off_when_pended_too_long
-#    - automation.someone_in_bathroom_turn_on_when_motion_continue_a_while
+#    - automation.bathroom_light_turn_off_when_pended_too_long
+    
+    - automation.someone_in_bathroom_turn_on_when_motion_continue_a_while
+    - automation.someone_in_bathroom_turn_on_when_motion_after_door_close
 
 
 ############################################

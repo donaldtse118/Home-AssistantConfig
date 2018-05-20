@@ -341,51 +341,41 @@
     - platform: state
       entity_id: binary_sensor.door_window_sensor_158d00019f6fef # bathroom door
       to: 'on'
+  condition:
+    condition: or 
+    conditions:
+    - condition: numeric_state
+      entity_id: light.bathroom_light_L
+      value_template: '{% if states.light.bathroom_light_L.state == "on"  %}{{ states.light.bathroom_light_L.attributes.brightness }}{% else %}0{% endif %}'
+      below: 255
+    - condition: numeric_state
+      entity_id: light.bathroom_light_R
+      value_template: '{% if states.light.bathroom_light_R.state == "on"  %}{{ states.light.bathroom_light_R.attributes.brightness }}{% else %}0{% endif %}'
+      below: 255
   action:
-    - service: input_boolean.turn_off # when door open, someone in bathroom unlock
-      data:
-        entity_id: input_boolean.someone_in_bathroom  
-    - condition: or 
-      conditions:
-        - condition: numeric_state
-          entity_id: light.bathroom_light_L
-          value_template: '{% if states.light.bathroom_light_L.state == "on"  %}{{ states.light.bathroom_light_L.attributes.brightness }}{% else %}0{% endif %}'
-          below: 255
-        - condition: numeric_state
-          entity_id: light.bathroom_light_R
-          value_template: '{% if states.light.bathroom_light_R.state == "on"  %}{{ states.light.bathroom_light_R.attributes.brightness }}{% else %}0{% endif %}'
-          below: 255
     - service: light.turn_on 
       data:
         entity_id: group.bathroom_light
         brightness_pct: 100
 
- # When motion triggered turn on light
- # When motion triggered and door is close, set someone_in_bathroom is true
- # ---------------------------------------------------------------------------
 
 - alias: bathroom_light_turn_on_when_someone_actions
   trigger: 
     - platform: state
       entity_id: binary_sensor.motion_sensor_158d0001dc14ab # bathroom motion
       to: 'on'
+  condition:
+    condition: or 
+    conditions:
+    - condition: numeric_state
+      entity_id: light.bathroom_light_L
+      value_template: '{% if states.light.bathroom_light_L.state == "on"  %}{{ states.light.bathroom_light_L.attributes.brightness }}{% else %}0{% endif %}'
+      below: 255
+    - condition: numeric_state
+      entity_id: light.bathroom_light_R
+      value_template: '{% if states.light.bathroom_light_R.state == "on"  %}{{ states.light.bathroom_light_R.attributes.brightness }}{% else %}0{% endif %}'
+      below: 255
   action:
-    - condition: state
-      entity_id: binary_sensor.door_window_sensor_158d00019f6fef # bathroom door
-      state: 'off'
-    - service: input_boolean.turn_on
-      data:
-        entity_id: input_boolean.someone_in_bathroom
-    - condition: or 
-      conditions:
-        - condition: numeric_state
-          entity_id: light.bathroom_light_L
-          value_template: '{% if states.light.bathroom_light_L.state == "on"  %}{{ states.light.bathroom_light_L.attributes.brightness }}{% else %}0{% endif %}'
-          below: 255
-        - condition: numeric_state
-          entity_id: light.bathroom_light_R
-          value_template: '{% if states.light.bathroom_light_R.state == "on"  %}{{ states.light.bathroom_light_R.attributes.brightness }}{% else %}0{% endif %}'
-          below: 255
     - service: light.turn_on 
       data:
         entity_id: group.bathroom_light
@@ -443,10 +433,53 @@
       data:
         entity_id: group.bathroom_light
 
-- alias: bathroom_light_turn_off_when_pended_too_long
-  trigger:
-    platform: time
-    seconds: 30
+#- alias: bathroom_light_turn_off_when_pended_too_long
+#  trigger:
+#    platform: time
+#    seconds: 30
+#  condition:
+#    condition: and
+#    conditions:
+#    - condition: state
+#      entity_id: input_boolean.someone_in_bathroom
+#      state: 'off'
+#    - condition: state
+#      entity_id: binary_sensor.motion_sensor_158d0001dc14ab # bathroom motion
+#      state: 'off'
+#    - condition: template # bathroom motion off more than 5mins
+#      value_template: '{{ (as_timestamp(now())-as_timestamp(states.binary_sensor.motion_sensor_158d0001dc14ab.last_updated)) > 60 * 5}}'
+#  action:
+#    - service: light.turn_off
+#      data:
+#        entity_id: group.bathroom_light
+
+ # When motion triggered and door is close, set someone_in_bathroom is true
+ # ---------------------------------------------------------------------------
+- alias: someone_in_bathroom_turn_on_when_motion_after_door_close
+  trigger: 
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001dc14ab # bathroom motion
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: binary_sensor.door_window_sensor_158d00019f6fef # bathroom door
+      state: 'off'
+  action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.someone_in_bathroom
+
+#
+# After door is closed, motion detected for a while
+# It means someone inside bathroom
+#---------------------------------------------------
+- alias: someone_in_bathroom_turn_on_when_motion_continue_a_while
+  trigger: 
+      - platform: state
+        entity_id: binary_sensor.door_window_sensor_158d00019f6fef # bathroom door
+        to: 'off'
+        for: 
+          seconds: 70
   condition:
     condition: and
     conditions:
@@ -455,18 +488,14 @@
       state: 'off'
     - condition: state
       entity_id: binary_sensor.motion_sensor_158d0001dc14ab # bathroom motion
-      state: 'off'
-    - condition: template # bathroom motion off more than 5mins
-      value_template: '{{ (as_timestamp(now())-as_timestamp(states.binary_sensor.motion_sensor_158d0001dc14ab.last_updated)) > 60 * 5}}'
+      state: 'on'
+    - condition: template # bathroom motion on closed more than 90sec
+      value_template: '{{ (as_timestamp(now())-as_timestamp(states.binary_sensor.motion_sensor_158d0001dc14ab.last_updated)) > 70}}'
   action:
-    - service: light.turn_off
+    - service: input_boolean.turn_on
       data:
-        entity_id: group.bathroom_light
+          entity_id: input_boolean.someone_in_bathroom
 
-#
-# After door is closed, motion detected for a while
-# It means someone inside bathroom
-#---------------------------------------------------
 #- alias: someone_in_bathroom_turn_on_when_motion_continue_a_while
 #  trigger:
 #    platform: time
