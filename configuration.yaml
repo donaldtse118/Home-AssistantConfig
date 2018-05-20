@@ -1,0 +1,173 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: !secret homeassistant_name
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 0
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Asia/Hong_Kong
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+#http:
+  # Secrets are defined in the file secrets.yaml
+  # api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  # base_url: example.duckdns.org:8123
+
+http:
+  # Uncomment this to add a password (recommended!)
+  api_password: !secret http_api_password
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+  base_url: !secret http_base_url
+  server_port: !secret http_server_port
+  trusted_networks:
+    - 127.0.0.1
+    - !secret http_trusted_networks
+  ip_ban_enabled: true
+  login_attempts_threshold: 5
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Weather prediction
+sensor:
+  - platform: yweather
+    monitored_conditions:
+      - weather
+      - weather_current
+      - temp_min
+      - temp_max
+      - wind_speed
+      - visibility
+      - humidity
+      - temperature
+  - platform: speedtest
+    monitored_conditions:
+      - ping
+      - download
+      - upload
+
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud
+cloud:
+    google_actions:
+        filter:
+            include_domains:
+                - switch
+                - light
+
+#enable python
+python_script:
+
+# Output 
+media_player:
+  - platform: cast
+    host: !secret ip_living_room_chromecast
+  - platform: cast
+    host: !secret ip_living_room_google_home 
+  - platform: lg_netcast  
+    host: !secret ip_living_room_tv
+    access_token: !secret living_room_tv_access_token
+    mac : !secret mac_living_room_tv
+    name : Living room TV
+    customize:
+    sources:
+      - hdmi1
+      - hdmi2
+      - hdmi3
+  - platform: spotify
+    client_id: !secret media_player_spotify_client_id
+    client_secret: !secret media_player_spotify_client_secret
+    
+    
+device_tracker:
+  - platform: nmap_tracker
+    hosts:
+    -  !secret ip_donald_v20
+    -  !secret ip_viola_v20
+    -  !secret ip_lena_mobile
+    home_intervals: 5 #scan every X mins
+    
+ifttt:
+  key : !secret ifttt_key
+
+#Mi Gateway
+xiaomi_aqara:
+  gateways:
+    - mac: 
+      key: !secret xiaomi_aqara_key
+      
+light:
+  - platform: yeelight
+    devices:
+      !secret ip_sofa_light_yeelight:
+        name: Sofa light
+        transition: 5000
+        use_music_mode: True 
+  - platform: xiaomi_miio
+    name: kitchen_light_L
+    host: !secret ip_kitchen_light_L
+    token: !secret light_xiaomi_miio_token_kitchen_light_L
+  - platform: xiaomi_miio
+    name: kitchen_light_R
+    host: !secret ip_kitchen_light_R
+    token: !secret light_xiaomi_miio_token_kitchen_light_R
+  - platform: xiaomi_miio
+    name: bathroom_light_L
+    host: !secret ip_bathroom_light_L
+    token: !secret light_xiaomi_miio_token_bathroom_light_L
+  - platform: xiaomi_miio
+    name: bathroom_light_R
+    host: !secret ip_bathroom_light_R
+    token: !secret light_xiaomi_miio_token_bathroom_light_R
+
+#recorder:
+#  db_url: mysql://hass:securePassword@core-mariadb/homeassistant
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+input_boolean: !include input_boolean.yaml
+

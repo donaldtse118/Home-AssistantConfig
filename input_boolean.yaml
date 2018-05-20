@@ -1,0 +1,19 @@
+nic_sleep_time:
+    name: Nicholas sleep time 
+    initial: off
+
+restart_hass:
+    name: restart_hass
+    initial: off
+
+someone_in_bathroom:
+    name: Someone in bathroom
+    initial: off
+
+someone_leaving_bathroom:
+    name: Someone leaving bathroom
+    initial: off
+
+adjust_light_room_light_brightness:
+    name: adjust_light_room_light_brightness
+    initial: off

@@ -1,0 +1,86 @@
+device_tracker.d013fd460ae2:
+  alias: device_tracker.donald_mobile
+  entity_picture: local/donald.jpg
+  friendly_name: Donald
+device_tracker.d013fd39981d:
+  entity_picture: local/viola.jpg
+  friendly_name: Viola
+device_tracker.f40e222da355:
+  entity_picture: local/lena.jpg
+  friendly_name: Lena
+binary_sensor.door_window_sensor_158d00019f6fef:
+  friendly_name: Bathroom door
+  icon: mdi:door
+  show_last_changed: true
+binary_sensor.door_window_sensor_158d0001b77b65:
+  friendly_name: Main door
+  icon: mdi:door
+  show_last_changed: true
+light.gateway_light_34ce008d55f1:
+  friendly_name: Main door Light
+  icon: mdi:lightbulb-outline
+light.yeelight_strip_7811dc63d0e2:
+  friendly_name: Sofa Light
+  icon: mdi:lightbulb-outline
+light.kitchen_light_L:
+  friendly_name: Kitchen Light [L]
+  icon: mdi:lightbulb-outline
+light.kitchen_light_R:
+  friendly_name: Kitchen Light [R]
+  icon: mdi:lightbulb-outline
+light.bathroom_light_L:
+  friendly_name: Bathroom Light [L]
+  icon: mdi:lightbulb-outline
+light.bathroom_light_R:
+  friendly_name: Bathroom Light [R]
+  icon: mdi:lightbulb-outline
+switch.wall_switch_158d00014a1a8b:
+  friendly_name: Nicholas bedroom Light
+  icon: mdi:lightbulb-outline
+switch.wall_switch_left_158d00016c618a:
+  friendly_name: Dining room Light
+  icon: mdi:lightbulb-outline
+switch.wall_switch_right_158d00016c618a:
+  friendly_name: Living room Light
+  icon: mdi:lightbulb-outline
+switch.wall_switch_left_158d0001a4184a:
+  friendly_name: Fluorescent Light
+  icon: mdi:lightbulb-outline
+switch.wall_switch_right_158d0001a4184a:
+  friendly_name: Spotlight
+  icon: mdi:lightbulb-outline
+binary_sensor.motion_sensor_158d00016e2640:
+  friendly_name: Corridor motion
+binary_sensor.motion_sensor_158d0001dc14ab:
+  friendly_name: Bathroom motion
+binary_sensor.motion_sensor_158d0001aa968c:
+  friendly_name: Kitchen motion
+media_player.living_room:
+  friendly_name: Living room Chromecast
+media_player.google_home:
+  google_assistant: 'false'
+sensor.temperature_158d0001b8ed4d:
+  friendly_name: Living room TEMP
+sensor.humidity_158d0001b8ed4d:
+  friendly_name: Living room HUM
+  icon: mdi:water-percent
+sensor.illumination_34ce008d55f1:
+  friendly_name: Living room LUX
+sensor.temperature_158d0001b8ecc5:
+  friendly_name: Nicholas bedroom TEMP
+sensor.humidity_158d0001b8ecc5:
+  friendly_name: Nicholas bedroom HUM
+  icon: mdi:water-percent
+sensor.yweather_current:
+  friendly_name: Weather
+sensor.yweather_condition:
+  friendly_name: Predition
+sensor.yweather_temperature:
+  friendly_name: outside TEMP
+sensor.yweather_temperature_max:
+  friendly_name: Max TEMP
+sensor.yweather_temperature_min:
+  friendly_name: Min TEMP
+sensor.yweather_humidity:
+  friendly_name: outside HUM
+  icon: mdi:water-percent

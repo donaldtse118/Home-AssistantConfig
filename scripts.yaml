@@ -1,0 +1,11 @@
+turn_off_all_lights:
+  sequence:  
+    - alias: turn off all light bulb 
+      data:
+        entity_id: group.all_lights
+      service: light.turn_off
+    - alias: turn off all light switch
+      data:
+        entity_id: group.home_all_lights_switch
+      service: switch.turn_off
+

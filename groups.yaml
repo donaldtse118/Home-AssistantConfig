@@ -1,0 +1,216 @@
+############################################
+## Default
+############################################
+default_view:
+  view: yes
+  icon: mdi:home-assistant
+  entities:
+    - group.family
+    - group.common_light
+    - group.default_motion
+    - group.default_door
+    - group.default_temp
+    - group.default_HUM
+    - group.default_visibility
+    - group.outside_weather
+    - group.network
+    
+default_temp_wrapper:
+  name: Temperature
+  entities: group.default_temp
+default_temp:
+  name: Temperature
+  entities:
+    - sensor.yweather_temperature #outside weather
+    - sensor.temperature_158d0001b8ed4d #Living Room Temp 
+    - sensor.temperature_158d0001b8ecc5 #Nicholas Bedroom Temp
+
+default_HUM_wrapper:
+  name: Humidity
+  entities: group.default_HUM
+
+default_HUM:
+  name: Humidity
+  entities:
+  - sensor.yweather_humidity
+  - sensor.humidity_158d0001b8ed4d #Living room humidity 
+  - sensor.humidity_158d0001b8ecc5 #Nicholas Bedroom humditiy
+
+default_visibility:
+  name: Visbility
+  entities:
+    - sensor.illumination_34ce008d55f1 #main door light sensor    
+    - sun.sun
+
+common_light:
+  name: Light
+  entities:
+    - switch.wall_switch_right_158d00016c618a # living room light
+    - switch.wall_switch_left_158d00016c618a # dining room light
+    - switch.wall_switch_left_158d0001a4184a #Light Trough
+    - switch.wall_switch_right_158d0001a4184a #Spotlight
+    - light.gateway_light_34ce008d55f1 #main door light Gateway
+    - light.sofa_light #sofa light
+    - light.kitchen_light_l #kitchen light left
+    - light.kitchen_light_R #kitchen light right
+    - light.bathroom_light_l #kitchen light left
+    - light.bathroom_light_R #kitchen light right
+    - switch.wall_switch_158d00014a1a8b #nicholas bedroom light
+#    - input_boolean.adjust_light_room_light_brightness
+
+default_motion:
+  name: Motion
+  entities:
+    - binary_sensor.motion_sensor_158d00016e2640 #corridor motion sensor
+    - binary_sensor.motion_sensor_158d0001dc14ab #bathroom motion sensor
+    - binary_sensor.motion_sensor_158d0001aa968c #kitchen motion sensor
+
+default_motion_wrapper:
+  name: Motion
+  entities:
+    - group.default_motion
+
+default_door:
+  name: Door
+  entities:
+    - binary_sensor.door_window_sensor_158d0001b77b65 #main door
+    - binary_sensor.door_window_sensor_158d00019f6fef #bathroom door
+
+default_door_wrapper:
+  name: Door
+  entities:
+    - group.default_door
+  
+
+###########################################
+## MEDIA
+##########################################
+media_tab:
+  view: yes
+  icon: mdi:television-classic
+  entities:
+    - media_player.google_home
+    - media_player.living_room_tv
+    - media_player.spotify
+
+
+############################################
+## LIVING ROOM AND DINING ROOM
+############################################
+#living_room_and_dining_room_tab:
+#  view: yes
+#  icon: mdi:readability
+#  name: Living Room
+
+############################################
+## NICHOLAS_BEBROOM 
+############################################    
+#nicholas_bedroom_tab:
+#   view: yes
+#   icon: mdi:human-child
+#   name: Nicholas Bedroom
+#   entities: 
+#    - group.nicholas_bedroom_light
+
+############################################
+## BATHROOM 
+############################################    
+bathroom_tab:
+  view: yes
+  icon: mdi:shower
+  name : Bathroom
+  entities:
+    - light.bathroom_light_l 
+    - light.bathroom_light_R 
+    - binary_sensor.door_window_sensor_158d00019f6fef #bathroom door
+    - binary_sensor.motion_sensor_158d00016e2640 #corridor motion sensor
+    - binary_sensor.motion_sensor_158d0001dc14ab #bathroom motion sensor
+    - input_boolean.someone_in_bathroom
+
+    - automation.bathroom_light_turn_on_when_someone_actions
+    - automation.bathroom_light_turn_on_when_door_open
+    - automation.bathroom_light_dim_when_idle_a_while
+    - automation.bathroom_light_dim_when_idle_a_longer
+    - automation.bathroom_light_turn_off_while_long_idle
+    - automation.bathroom_light_turn_off_when_pended_too_long
+#    - automation.someone_in_bathroom_turn_on_when_motion_continue_a_while
+
+
+############################################
+## Automatiion 
+############################################    
+automation_tab:
+   view: yes
+   icon: mdi:robot
+   name: Automation
+   entities: 
+    - automation.turn_on_sofa_light_with_disco_effect_when_google_home_play_music
+    - automation.all_lights_turn_off_when_no_one_home
+
+############################################################################################################################################
+# COMMON
+############################################################################################################################################
+
+family:
+  name: Family
+  entities:
+    - device_tracker.d013fd460ae2  #donald_phone
+    - device_tracker.d013fd39981d  #viola_phone
+    - device_tracker.f40e222da355  #lena_phone
+
+network:
+  name: Network
+  entities:
+    - input_boolean.restart_hass
+    - sensor.speedtest_download
+
+outside_weather_wrapper:
+  name: Outside weather
+  entities: group.outside_weather
+outside_weather:
+  name: Outside weather
+  entities:
+    - sensor.yweather_current
+    - sensor.yweather_condition
+    - sensor.yweather_temperature
+    - sensor.yweather_temperature_max
+    - sensor.yweather_temperature_min
+    - sensor.yweather_humidity
+    - sun.sun
+#    - sensor.yweather_visibility
+#    - sensor.yweather_wind_speed
+
+
+living_room_and_dining_room_strong_light:
+  entities:
+    - switch.wall_switch_right_158d00016c618a # living room light
+    - switch.wall_switch_left_158d00016c618a # dining room light
+    - switch.wall_switch_left_158d0001a4184a #Light Trough
+
+home_weather:
+  name: Home Weather
+  entities:
+    - sensor.temperature_158d0001b8ed4d #Living Room Temp 
+    - sensor.humidity_158d0001b8ed4d #Living room humidity 
+    - sensor.temperature_158d0001b8ecc5 #Nicholas Bedroom Temp
+    - sensor.humidity_158d0001b8ecc5 #Nicholas Bedroom humditiy
+    - sensor.illumination_34ce008d55f1 #main door light sensor
+
+bathroom_light:
+  name: Bathroom light
+  entities:
+    - light.bathroom_light_l
+    - light.bathroom_light_r
+
+kitchen_light:
+  name: Kitchen light
+  entities:
+    - light.kitchen_light_l
+    - light.kitchen_light_r
+
+household:
+  name: household
+  entities:
+    - device_tracker.d013fd460ae2 #donald mobile
+    - device_tracker.d013fd39981d #viola mobile
+    - device_tracker.f40e222da355 #lena mobile
