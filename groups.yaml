@@ -50,7 +50,7 @@ common_light:
     - switch.wall_switch_left_158d0001a4184a #Light Trough
     - switch.wall_switch_right_158d0001a4184a #Spotlight
     - light.gateway_light_34ce008d55f1 #main door light Gateway
-    - light.sofa_light #sofa light
+    - light.donald_bedroom_side_light
     - light.kitchen_light_l #kitchen light left
     - light.kitchen_light_R #kitchen light right
     - light.bathroom_light_l #kitchen light left
@@ -123,7 +123,6 @@ bathroom_tab:
     - light.bathroom_light_l 
     - light.bathroom_light_R 
     - binary_sensor.door_window_sensor_158d00019f6fef #bathroom door
-    - binary_sensor.motion_sensor_158d00016e2640 #corridor motion sensor
     - binary_sensor.motion_sensor_158d0001dc14ab #bathroom motion sensor
     - input_boolean.someone_in_bathroom
 

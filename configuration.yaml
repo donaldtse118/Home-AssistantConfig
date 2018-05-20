@@ -142,8 +142,8 @@ xiaomi_aqara:
 light:
   - platform: yeelight
     devices:
-      !secret ip_sofa_light_yeelight:
-        name: Sofa light
+      !secret ip_donald_bedroom_side_light:
+        name: Donald bedroom side light
         transition: 5000
         use_music_mode: True 
   - platform: xiaomi_miio
