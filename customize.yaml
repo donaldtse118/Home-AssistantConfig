@@ -16,6 +16,9 @@ binary_sensor.door_window_sensor_158d0001b77b65:
   friendly_name: Main door
   icon: mdi:door
   show_last_changed: true
+binary_sensor.switch_158d00022c382e:
+  friendly_name: Donald bed side button
+  show_last_change: true
 light.gateway_light_34ce008d55f1:
   friendly_name: Main door Light
   icon: mdi:lightbulb-outline

@@ -1,7 +1,8 @@
 ############################################
 ## Default
 ############################################
-default_view:
+#default_view:
+my_view:
   view: yes
   icon: mdi:home-assistant
   entities:
@@ -50,11 +51,11 @@ common_light:
     - switch.wall_switch_left_158d0001a4184a #Light Trough
     - switch.wall_switch_right_158d0001a4184a #Spotlight
     - light.gateway_light_34ce008d55f1 #main door light Gateway
-    - light.donald_bedroom_side_light
     - light.kitchen_light_l #kitchen light left
     - light.kitchen_light_R #kitchen light right
     - light.bathroom_light_l #kitchen light left
     - light.bathroom_light_R #kitchen light right
+    - light.donald_bedroom_side_light
     - switch.wall_switch_158d00014a1a8b #nicholas bedroom light
 #    - input_boolean.adjust_light_room_light_brightness
 
@@ -131,10 +132,9 @@ bathroom_tab:
     - automation.bathroom_light_dim_when_idle_a_while
     - automation.bathroom_light_dim_when_idle_a_longer
     - automation.bathroom_light_turn_off_while_long_idle
-#    - automation.bathroom_light_turn_off_when_pended_too_long
-    
     - automation.someone_in_bathroom_turn_on_when_motion_continue_a_while
     - automation.someone_in_bathroom_turn_on_when_motion_after_door_close
+    - automation.someone_in_bathroom_turn_off_when_door_open
 
 
 ############################################
@@ -145,8 +145,9 @@ automation_tab:
    icon: mdi:robot
    name: Automation
    entities: 
-    - automation.turn_on_sofa_light_with_disco_effect_when_google_home_play_music
-    - automation.all_lights_turn_off_when_no_one_home
+    group.all_automations
+  #- automation.turn_on_sofa_light_with_disco_effect_when_google_home_play_music
+  #  - automation.all_lights_turn_off_when_no_one_home
 
 ############################################################################################################################################
 # COMMON
@@ -158,6 +159,9 @@ family:
     - device_tracker.d013fd460ae2  #donald_phone
     - device_tracker.d013fd39981d  #viola_phone
     - device_tracker.f40e222da355  #lena_phone
+
+guest:
+  name: guest
 
 network:
   name: Network

@@ -126,34 +126,39 @@
     - platform: sun
       event: sunset
       offset: "-00:45:00"
-    - platform: state
-      entity_id: group.all_devices
-      from: 'not_home'
-      to: 'home'
   condition:
     condition: and
     conditions:
       - condition: state
-        entity_id: group.all_devices
-        state: home
+        entity_id: custom_sensor.anyone_home
+        state: 'on'
       - condition: state
         entity_id: switch.wall_switch_left_158d0001a4184a #light trough     
         state: 'off'
-      - condition: sun
-        after: sunset
-        after_offset: "-0:45:00"
   action:
-    service: switch.turn_on
-    entity_id: switch.wall_switch_left_158d0001a4184a #light trough
+    - service: tts.google_say
+      data_template:
+        entity_id: media_player.google_home
+        message: >
+          'Sunset soon, let me turn on light trough for you'
+    - delay: '00:00:05'
+    - service: switch.turn_on
+      entity_id: switch.wall_switch_left_158d0001a4184a #light trough
 
 
 # light_trough_turn_on_when_wakeup_in_the_morning
 ##------------------------------------------------------------
 - alias : light_trough_turn_on_when_wakeup_in_the_morning
   action:
-    data:
-      entity_id: switch.wall_switch_left_158d0001a4184a #light trough     
-    service: switch.turn_on
+    - service: tts.google_say
+      data_template:
+        entity_id: media_player.google_home
+        message: >
+          'Sunset soon, let me turn on light trough for you'
+    - service: switch.turn_on
+      data:
+        entity_id: switch.wall_switch_left_158d0001a4184a #light trough     
+      
   condition:
     condition: and
     conditions:
@@ -187,8 +192,7 @@
         state: 'on'  
   trigger:
     - platform: time
-      at: '07:50:00'
-
+      at: '07:45:00'
 
 
 ## light_trough_turn_off_when_light_enough
@@ -295,6 +299,10 @@
       for: 
         minutes: 1
         seconds : 0
+  condition:  # if some intended to turn it off..dun turn it on again
+    condition: state
+    entity_id: group.kitchen_light
+    state: 'on'  
   action:
     - service: light.turn_on 
       data:
@@ -387,11 +395,16 @@
       entity_id: binary_sensor.motion_sensor_158d0001dc14ab # bathroom motion
       to: 'off'
       for: 
-        seconds: 30
+        seconds: 15
   condition:  # when someone inside, dun dim
-    condition: state
-    entity_id: input_boolean.someone_in_bathroom
-    state: 'off'  
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.someone_in_bathroom
+        state: 'off'  
+      - condition: state  # if some intended to turn it off..dun turn it on again
+        entity_id: group.bathroom_light
+        state: 'on'  
   action:
     - service: light.turn_on 
       data:
@@ -404,12 +417,17 @@
       entity_id: binary_sensor.motion_sensor_158d0001dc14ab # bathroom motion
       to: 'off'
       for: 
-        minutes: 1
-        seconds: 0
+        minutes: 0
+        seconds: 30
   condition:  # when someone inside, dun dim
-    condition: state
-    entity_id: input_boolean.someone_in_bathroom
-    state: 'off'  
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.someone_in_bathroom
+        state: 'off'  
+      - condition: state  # if some intended to turn it off..dun turn it on again
+        entity_id: group.bathroom_light
+        state: 'on'  
   action:
     - service: light.turn_on 
       data:
@@ -422,8 +440,25 @@
       entity_id: binary_sensor.motion_sensor_158d0001dc14ab # bathroom motion
       to: 'off'
       for: 
+        minutes: 0
+        seconds: 45
+  condition:  # when someone inside, dun dim
+    condition: state
+    entity_id: input_boolean.someone_in_bathroom
+    state: 'off'  
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: group.bathroom_light
+
+- alias: bathroom_light_turn_off_while_long_idle_double_check
+  trigger: 
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001dc14ab # bathroom motion
+      to: 'off'
+      for: 
         minutes: 1
-        seconds: 30
+        seconds: 0
   condition:  # when someone inside, dun dim
     condition: state
     entity_id: input_boolean.someone_in_bathroom
@@ -453,6 +488,19 @@
 #      data:
 #        entity_id: group.bathroom_light
 
+
+ # When motion triggered and door is close, set someone_in_bathroom is true
+ # ---------------------------------------------------------------------------
+- alias: someone_in_bathroom_turn_off_when_door_open
+  trigger: 
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d00019f6fef # bathroom motion
+      to: 'on'
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.someone_in_bathroom
+
  # When motion triggered and door is close, set someone_in_bathroom is true
  # ---------------------------------------------------------------------------
 - alias: someone_in_bathroom_turn_on_when_motion_after_door_close
@@ -479,7 +527,7 @@
         entity_id: binary_sensor.door_window_sensor_158d00019f6fef # bathroom door
         to: 'off'
         for: 
-          seconds: 70
+          seconds: 135
   condition:
     condition: and
     conditions:
@@ -490,7 +538,7 @@
       entity_id: binary_sensor.motion_sensor_158d0001dc14ab # bathroom motion
       state: 'on'
     - condition: template # bathroom motion on closed more than 90sec
-      value_template: '{{ (as_timestamp(now())-as_timestamp(states.binary_sensor.motion_sensor_158d0001dc14ab.last_updated)) > 70}}'
+      value_template: '{{ (as_timestamp(now())-as_timestamp(states.binary_sensor.motion_sensor_158d0001dc14ab.last_updated)) > 135}}'
   action:
     - service: input_boolean.turn_on
       data:
@@ -521,13 +569,51 @@
 #      data:
 #          entity_id: input_boolean.someone_in_bathroom
 
-    
+########################################################################################
+#
+# Donald Bedroom side light
+#
+########################################################################################
+- alias: toggle_donald_bedroom_side_light_when_click_donald_side_bed_button
+  action:
+    service: light.toggle
+    data:
+        entity_id: light.donald_bedroom_side_light
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d00022c382e # Donald bed side button
+      click_type: single
+
+#- alias: set_donald_bedroom_side_color_to_normal_color
+#  action:
+#    service: light.toggle
+#    data:
+#        entity_id: light.donald_bedroom_side_light
+#        rgb_color: [255,180,100]
+#  trigger:
+#    platform: state
+#    entity_id: light.donald_bedroom_side_light
+#    to: 'on'
 
 ########################################################################################
 #
 # ALL LIGHTS
 #
 ########################################################################################
+
+# turn_off_all_lights_when_long_press_donald_side_bed_button
+########################################################################################
+- alias: all_lights_turn_off_when_long_press_donald_side_bed_button
+  action:
+    service: script.turn_off_all_lights
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d00022c382e # Donald bed side button
+      click_type: long_click_press
 
 # turn_off_all_lights_when_no_one_home
 ########################################################################################
@@ -541,12 +627,15 @@
         entity_id: group.all_lights
         state: 'on'
       - condition: state
-        entity_id: group.home_all_lights_switch
+        entity_id: group.all_switches
         state: 'on'
+      - condition: state  # no one moving for a while
+        entity_id: group.default_motion
+        state: 'off'
   trigger:    
-  - entity_id: group.all_devices
+  - entity_id: custom_sensor.anyone_home
     platform: state
-    to: 'not_home'
+    to: 'off'
     for:
       minutes: 30
 
@@ -574,30 +663,6 @@
 # TTS
 #
 ###############################################################################
-
-#- alias: tts_say_weclome_if_someone_no_home
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.door_window_sensor_158d0001b77b65  #main door
-#    to: 'on'
-#  condition: 
-#    condition: and
-#    conditions:
-#      - condition: time
-#        after:  '17:00:00'  
-#        before: '23:00:00'
-#      - condition: template
-#        value_template: '{{ states.custom_sensor.people_home.attributes.people_not_home_count > 0 }}'
-#  action:
-#    - service: tts.google_say
-#      data_template:
-#        entity_id: media_player.google_home
-#        message: > 
-#          'Welcome home' 
-#          {% if states.custom_sensor.people_home.attributes['people_not_home_count'] | int == 1 %}
-#          {{states.custom_sensor.people_home.attributes['people_not_home']}}
-#          {% endif %} 
-
 - alias: tts_good_morning_in_weekday
   trigger:
     - platform: time
@@ -606,6 +671,8 @@
       at: '07:00:00'
     - platform: time
       at: '07:10:00'
+    - platform: time
+      at: '07:45:00'
   condition:
     condition: and
     conditions:
@@ -617,8 +684,8 @@
           - thu
           - fri
       - condition: state
-        entity_id: group.all_devices
-        state: 'home'
+        entity_id: custom_sensor.anyone_home
+        state: 'on'
   action:
     - service: tts.google_say
       data_template:
@@ -661,4 +728,5 @@
     minutes: 1
     seconds: 00
   action:
-    service: python_script.count_people_home
+    - service: python_script.count_people_home
+    - service: python_script.anyone_home

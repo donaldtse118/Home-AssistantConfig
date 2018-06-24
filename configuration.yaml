@@ -128,6 +128,7 @@ device_tracker:
     -  !secret ip_donald_v20
     -  !secret ip_viola_v20
     -  !secret ip_lena_mobile
+    -  !secret ip_joey_K_mobile
     home_intervals: 5 #scan every X mins
     
 ifttt:
@@ -144,7 +145,7 @@ light:
     devices:
       !secret ip_donald_bedroom_side_light:
         name: Donald bedroom side light
-        transition: 5000
+#        transition: 5000
         use_music_mode: True 
   - platform: xiaomi_miio
     name: kitchen_light_L

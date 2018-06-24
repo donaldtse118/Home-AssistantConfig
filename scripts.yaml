@@ -1,11 +1,30 @@
 turn_off_all_lights:
-  sequence:  
+  sequence:
+    - alias: turn off all light switch
+      data:
+        entity_id: group.all_switches
+      service: switch.turn_off
     - alias: turn off all light bulb 
       data:
         entity_id: group.all_lights
       service: light.turn_off
-    - alias: turn off all light switch
+    - alias: turn onald bedroom side light to green indicate all light turns off
+      service: light.turn_on
       data:
-        entity_id: group.home_all_lights_switch
-      service: switch.turn_off
+          entity_id: light.donald_bedroom_side_light
+          rgb_color: [170,255,150] # light green
+    - delay: '00:00:01'
+    - alias: turn donald bedroom side light back to normal
+      service: light.turn_on
+      data:
+          entity_id: light.donald_bedroom_side_light
+          rgb_color: [255,180,100]  # light orange
+    - alias: turn off onald bedroom side light 
+      service: light.turn_off
+      data:
+          entity_id: light.donald_bedroom_side_light
+
+   
+
+
 
