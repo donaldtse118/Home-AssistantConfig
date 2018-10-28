@@ -81,6 +81,10 @@ sensor:
       - humidity
       - temperature
   - platform: speedtest
+    hour: #do 3 hrs per day
+      - 1
+      - 9
+      - 17
     monitored_conditions:
       - ping
       - download
@@ -90,13 +94,20 @@ sensor:
 tts:
   - platform: google
 
-# Cloud
-cloud:
-    google_actions:
-        filter:
-            include_domains:
-                - switch
-                - light
+# Cloud , need to charge, switch back to manual setup
+#cloud:
+#    google_actions:
+#        filter:
+#            include_domains:
+#                - switch
+#                - light
+
+google_assistant:
+  project_id: !secret google_assistant_project_id
+  exposed_domains:
+    - switch
+    - light
+
 
 #enable python
 python_script:
@@ -166,6 +177,8 @@ light:
 
 #recorder:
 #  db_url: mysql://hass:securePassword@core-mariadb/homeassistant
+
+
 
 group: !include groups.yaml
 automation: !include automations.yaml

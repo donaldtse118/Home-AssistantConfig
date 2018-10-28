@@ -1,8 +1,8 @@
 ############################################
 ## Default
 ############################################
-#default_view:
-my_view:
+default_view:
+#my_view:
   view: yes
   icon: mdi:home-assistant
   entities:
@@ -16,19 +16,12 @@ my_view:
     - group.outside_weather
     - group.network
     
-default_temp_wrapper:
-  name: Temperature
-  entities: group.default_temp
 default_temp:
   name: Temperature
   entities:
     - sensor.yweather_temperature #outside weather
     - sensor.temperature_158d0001b8ed4d #Living Room Temp 
     - sensor.temperature_158d0001b8ecc5 #Nicholas Bedroom Temp
-
-default_HUM_wrapper:
-  name: Humidity
-  entities: group.default_HUM
 
 default_HUM:
   name: Humidity
@@ -51,13 +44,10 @@ common_light:
     - switch.wall_switch_left_158d0001a4184a #Light Trough
     - switch.wall_switch_right_158d0001a4184a #Spotlight
     - light.gateway_light_34ce008d55f1 #main door light Gateway
-    - light.kitchen_light_l #kitchen light left
-    - light.kitchen_light_R #kitchen light right
-    - light.bathroom_light_l #kitchen light left
-    - light.bathroom_light_R #kitchen light right
+    - group.kitchen_light
+    - group.bathroom_light
     - light.donald_bedroom_side_light
     - switch.wall_switch_158d00014a1a8b #nicholas bedroom light
-#    - input_boolean.adjust_light_room_light_brightness
 
 default_motion:
   name: Motion
@@ -66,21 +56,11 @@ default_motion:
     - binary_sensor.motion_sensor_158d0001dc14ab #bathroom motion sensor
     - binary_sensor.motion_sensor_158d0001aa968c #kitchen motion sensor
 
-default_motion_wrapper:
-  name: Motion
-  entities:
-    - group.default_motion
-
 default_door:
   name: Door
   entities:
     - binary_sensor.door_window_sensor_158d0001b77b65 #main door
     - binary_sensor.door_window_sensor_158d00019f6fef #bathroom door
-
-default_door_wrapper:
-  name: Door
-  entities:
-    - group.default_door
   
 
 ###########################################
@@ -146,8 +126,6 @@ automation_tab:
    name: Automation
    entities: 
     group.all_automations
-  #- automation.turn_on_sofa_light_with_disco_effect_when_google_home_play_music
-  #  - automation.all_lights_turn_off_when_no_one_home
 
 ############################################################################################################################################
 # COMMON
@@ -166,12 +144,8 @@ guest:
 network:
   name: Network
   entities:
-    - input_boolean.restart_hass
     - sensor.speedtest_download
 
-outside_weather_wrapper:
-  name: Outside weather
-  entities: group.outside_weather
 outside_weather:
   name: Outside weather
   entities:
