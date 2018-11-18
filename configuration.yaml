@@ -29,8 +29,8 @@ config:
   # base_url: example.duckdns.org:8123
 
 http:
-  # Uncomment this to add a password (recommended!)
-  api_password: !secret http_api_password
+  # going to be obsoleted https://www.home-assistant.io/docs/authentication/
+  #api_password: !secret http_api_password  
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
   base_url: !secret http_base_url
@@ -68,8 +68,10 @@ map:
 # Track the sun
 sun:
 
-# Weather prediction
+
+# IOT
 sensor:
+  # Weather prediction
   - platform: yweather
     monitored_conditions:
       - weather
@@ -80,6 +82,9 @@ sensor:
       - visibility
       - humidity
       - temperature
+  #google wifi
+  - platform: google_wifi
+  #network speed
   - platform: speedtest
     hour: #do 3 hrs per day
       - 1
@@ -89,6 +94,20 @@ sensor:
       - ping
       - download
       - upload
+# system monitoring on homeassistant server
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /config
+      - type: processor_use
+      - type: memory_use_percent
+      - type: memory_free
+      - type: network_in
+        arg: eth0
+      - type: network_out
+        arg: eth0
+      - type: last_boot
+      - type: since_last_boot
 
 # Text to speech
 tts:
@@ -112,12 +131,14 @@ google_assistant:
 #enable python
 python_script:
 
+# chromecast and google home
+cast:
+  media_player:
+    - host: !secret ip_living_room_chromecast
+    - host: !secret ip_living_room_google_home 
+
 # Output 
 media_player:
-  - platform: cast
-    host: !secret ip_living_room_chromecast
-  - platform: cast
-    host: !secret ip_living_room_google_home 
   - platform: lg_netcast  
     host: !secret ip_living_room_tv
     access_token: !secret living_room_tv_access_token

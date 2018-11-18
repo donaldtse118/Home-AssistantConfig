@@ -13,9 +13,9 @@
 #-------------------------------------------------------------------------------
 - alias : main_door_light_turn_on_when_someone_move_in_dark_or_main_door_opened
   action:
-    data:
-      entity_id: light.gateway_light_34ce008d55f1 # main door light
-    service: light.turn_on
+    - service: light.turn_on
+      data:
+        entity_id: light.gateway_light_34ce008d55f1 # main door light
   condition:
     condition: and
     conditions: 
@@ -154,7 +154,7 @@
       data_template:
         entity_id: media_player.google_home
         message: >
-          'Sunset soon, let me turn on light trough for you'
+          'Good morning, a little bit dark now, let me turn on light trough for you'
     - service: switch.turn_on
       data:
         entity_id: switch.wall_switch_left_158d0001a4184a #light trough     
@@ -222,39 +222,6 @@
   action:
     service: switch.turn_off
     entity_id: switch.wall_switch_left_158d0001a4184a #light trough   
-
-
-###############################################################################
-#
-# SOFA_LIGHT
-#
-###############################################################################
-
-# turn_on_sofa_light_with_disco_effect_when_google_home_play_music
-##------------------------------------------------------------
-- alias: turn_on_sofa_light_with_disco_effect_when_google_home_play_music
-  trigger:
-    - entity_id: media_player.goolge_home
-      platform: state
-      to: 'playing'
-  action:
-    service: light.turn_on
-    data:
-      entity_id: light.sofa_light # sofa light
-      effect: Disco
-
-# turn_off_sofa_light_when_google_home_music_on
-##------------------------------------------------------------
-- alias: turn_off_sofa_light_when_google_home_music_on
-  trigger:
-    - entity_id: media_player.goolge_home
-      platform: state
-      from: 'playing'
-  action:
-    service: light.turn_off
-    data:
-      entity_id: light.sofa_light # sofa light
-
 
 # ###############################################################################
 #
@@ -468,27 +435,6 @@
       data:
         entity_id: group.bathroom_light
 
-#- alias: bathroom_light_turn_off_when_pended_too_long
-#  trigger:
-#    platform: time
-#    seconds: 30
-#  condition:
-#    condition: and
-#    conditions:
-#    - condition: state
-#      entity_id: input_boolean.someone_in_bathroom
-#      state: 'off'
-#    - condition: state
-#      entity_id: binary_sensor.motion_sensor_158d0001dc14ab # bathroom motion
-#      state: 'off'
-#    - condition: template # bathroom motion off more than 5mins
-#      value_template: '{{ (as_timestamp(now())-as_timestamp(states.binary_sensor.motion_sensor_158d0001dc14ab.last_updated)) > 60 * 5}}'
-#  action:
-#    - service: light.turn_off
-#      data:
-#        entity_id: group.bathroom_light
-
-
  # When motion triggered and door is close, set someone_in_bathroom is true
  # ---------------------------------------------------------------------------
 - alias: someone_in_bathroom_turn_off_when_door_open
@@ -544,30 +490,6 @@
       data:
           entity_id: input_boolean.someone_in_bathroom
 
-#- alias: someone_in_bathroom_turn_on_when_motion_continue_a_while
-#  trigger:
-#    platform: time
-#    seconds: 10
-#  condition:
-#    condition: and
-#    conditions:
-#    - condition: state
-#      entity_id: input_boolean.someone_in_bathroom
-#      state: 'off'
-#    - condition: state
-#      entity_id: binary_sensor.door_window_sensor_158d00019f6fef # bathroom door
-#      state: 'off'
-#    - condition: state
-#      entity_id: binary_sensor.motion_sensor_158d0001dc14ab # bathroom motion
-#      state: 'on'
-#    - condition: template # bathroom motion on closed more than 90sec
-#      value_template: '{{ (as_timestamp(now())-as_timestamp(states.binary_sensor.motion_sensor_158d0001dc14ab.last_updated)) > 90}}'
-#    - condition: template # bathroom door closed more than 90sec
-#      value_template: '{{ (as_timestamp(now())-as_timestamp(states.binary_sensor.door_window_sensor_158d00019f6fef.last_updated)) > 90}}'
-#  action:
-#    - service: input_boolean.turn_on
-#      data:
-#          entity_id: input_boolean.someone_in_bathroom
 
 ########################################################################################
 #
@@ -639,24 +561,6 @@
     for:
       minutes: 30
 
-#- alias: living_room_light_ADJUST_brightness
-#  action:
-#    - service: switch.turn_off
-#      data:
-#        entity_id: switch.wall_switch_right_158d00016c618a #living room light
-#    - delay:
-#        seconds: 1
-#    - service: switch.turn_on
-#      data:
-#        entity_id: switch.wall_switch_right_158d00016c618a #living room light 
-#    - service: input_boolean.turn_off
-#      data:
-#        entity_id: input_boolean.adjust_light_room_light_brightness
-#  trigger:
-#    - entity_id: input_boolean.adjust_light_room_light_brightness
-#      platform: state
-#      to: 'on'
-
 
 ###############################################################################
 #
@@ -671,6 +575,8 @@
       at: '07:00:00'
     - platform: time
       at: '07:10:00'
+    - platform: time
+      at: '07:20:00'
     - platform: time
       at: '07:45:00'
   condition:

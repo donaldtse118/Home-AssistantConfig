@@ -14,7 +14,7 @@ default_view:
     - group.default_HUM
     - group.default_visibility
     - group.outside_weather
-    - group.network
+
     
 default_temp:
   name: Temperature
@@ -118,14 +118,17 @@ bathroom_tab:
 
 
 ############################################
-## Automatiion 
+## System 
 ############################################    
-automation_tab:
+system_tab:
    view: yes
    icon: mdi:robot
-   name: Automation
+   name: System
    entities: 
-    group.all_automations
+    - group.all_automations
+    - group.server_status
+    - group.google_wifi_status
+    - group.network
 
 ############################################################################################################################################
 # COMMON
@@ -158,6 +161,26 @@ outside_weather:
     - sun.sun
 #    - sensor.yweather_visibility
 #    - sensor.yweather_wind_speed
+
+server_status:
+  name: HASSIO server status
+  entities:
+    - sensor.processor_use
+    - sensor.memory_free
+    - sensor.memory_use_percent
+    - sensor.network_in_eth0
+    - sensor.network_out_eth0
+    - sensor.disk_use_percent_home
+    - sensor.disk_use_percent_config
+    - sensor.last_boot
+    - sensor.since_last_boot
+
+google_wifi_status:
+  name: Google wifi status
+  entities:
+    - sensor.google_wifi_current_version
+    - sensor.google_wifi_last_restart
+    - sensor.google_wifi_uptime
 
 
 living_room_and_dining_room_strong_light:
